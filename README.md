@@ -10,7 +10,7 @@ Desktop currency converter built from Spec-Driven Development artifacts. It uses
 ## Start the application
 
 ```powershell
-py -m currency_converter
+python -m currency_converter
 ```
 
 The first successful BNM response is saved locally in `data/cache.json`. The program will offer this saved rate when the network is unavailable.
@@ -18,7 +18,7 @@ The first successful BNM response is saved locally in `data/cache.json`. The pro
 ## Run tests
 
 ```powershell
-py -m unittest discover -s tests -v
+python -m unittest discover -s tests -v
 ```
 
 ## Project layout
