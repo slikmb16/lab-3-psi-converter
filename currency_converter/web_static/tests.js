@@ -1,11 +1,19 @@
-function test(name, callback) { try { callback(); return {name, ok:true}; } catch (error) { return {name, ok:false, message:error.message}; } }
+const cases = [
+  ['usd-eur','Конвертация USD → EUR','100 USD при курсах 17,2 и 20 MDL дают 86 EUR.', () => equal(round(CurrencyFlow.calculate(100,'USD','EUR',{USD:'17.2',EUR:'20',MDL:'1'})),86)],
+  ['eur-usd','Обратная конвертация EUR → USD','86 EUR возвращаются в 100 USD.', () => equal(round(CurrencyFlow.calculate(86,'EUR','USD',{USD:'17.2',EUR:'20',MDL:'1'})),100)],
+  ['same','Одинаковые валюты','Сумма не меняется при EUR → EUR.', () => equal(CurrencyFlow.calculate(12.5,'EUR','EUR',{EUR:'20',MDL:'1'}),12.5)],
+  ['comma','Десятичная запятая','Значение 12,50 принимается как число.', () => equal(CurrencyFlow.validateAmount('12,50'),12.5)],
+  ['point','Десятичная точка','Значение 12.50 принимается как число.', () => equal(CurrencyFlow.validateAmount('12.50'),12.5)],
+  ['empty','Пустая сумма','Пустое поле выдаёт понятную ошибку.', () => throws(() => CurrencyFlow.validateAmount(''))],
+  ['zero','Нулевая сумма','Ноль не запускает конвертацию.', () => throws(() => CurrencyFlow.validateAmount('0'))],
+  ['negative','Отрицательная сумма','Отрицательное число не принимается.', () => throws(() => CurrencyFlow.validateAmount('-10'))],
+  ['letters','Буквы вместо суммы','Текст не проходит проверку.', () => throws(() => CurrencyFlow.validateAmount('abc'))],
+  ['currency','Неизвестная валюта','Расчёт отклоняет отсутствующий код валюты.', () => throws(() => CurrencyFlow.calculate(10,'XXX','MDL',{MDL:'1'}))]
+];
+const state = {}; const grid = document.getElementById('test-grid');
 function equal(actual, expected) { if (actual !== expected) throw new Error(`ожидалось ${expected}, получено ${actual}`); }
-function run() { const {validateAmount, calculate} = window.CurrencyFlow; const results = [
-  test('Конвертация USD → EUR', () => equal(Number(calculate(100, 'USD', 'EUR', {USD:'17.2', EUR:'20', MDL:'1'}).toFixed(2)), 86)),
-  test('Обратная конвертация EUR → USD', () => equal(Number(calculate(86, 'EUR', 'USD', {USD:'17.2', EUR:'20', MDL:'1'}).toFixed(2)), 100)),
-  test('Одинаковые валюты не меняют сумму', () => equal(calculate(12.5, 'EUR', 'EUR', {EUR:'20', MDL:'1'}), 12.5)),
-  test('Принимается десятичная запятая', () => equal(validateAmount('12,50'), 12.5)),
-  test('Ноль не проходит валидацию', () => { try { validateAmount('0'); } catch (_) { return; } throw new Error('ошибка не была показана'); }),
-  test('Буквы не проходят валидацию', () => { try { validateAmount('abc'); } catch (_) { return; } throw new Error('ошибка не была показана'); })
-]; const list = document.getElementById('test-list'); list.innerHTML = results.map(r => `<li class="${r.ok?'pass':'fail'}">${r.ok?'✓':'×'} ${r.name}${r.message ? `: ${r.message}` : ''}</li>`).join(''); }
-document.getElementById('run-tests').addEventListener('click', run); run();
+function round(value) { return Number(value.toFixed(2)); }
+function throws(callback) { try { callback(); } catch (_) { return; } throw new Error('ожидалась ошибка, но её не было'); }
+function execute(id) { const item = cases.find(([key]) => key === id); try { item[3](); state[id] = {ok:true, message:'Пройден'}; } catch (error) { state[id] = {ok:false, message:error.message}; } render(); }
+function render() { grid.innerHTML = cases.map(([id,title,description]) => { const result = state[id]; return `<article class="test-card ${result ? (result.ok?'pass':'fail') : ''}"><h3>${title}</h3><p>${description}</p><footer><button data-test="${id}">Запустить</button><span class="test-state">${result ? (result.ok?'✓ '+result.message:'× '+result.message) : 'Не запускался'}</span></footer></article>`; }).join(''); document.querySelectorAll('[data-test]').forEach((button) => button.addEventListener('click', () => execute(button.dataset.test))); const results = Object.values(state); document.getElementById('test-summary').textContent = !results.length ? 'Ещё не запускались' : `Пройдено: ${results.filter(x=>x.ok).length} из ${cases.length}`; }
+document.getElementById('run-all').addEventListener('click', () => cases.forEach(([id]) => execute(id))); render();

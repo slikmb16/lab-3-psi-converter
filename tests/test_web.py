@@ -52,6 +52,12 @@ class WebApplicationTests(unittest.TestCase):
         self.assertIn("text/html", content_type)
         self.assertIn("Конвертер валют", body)
 
+    def test_test_page_offers_individual_and_full_test_runs(self) -> None:
+        status, _, body = self.request("/tests.html")
+        self.assertEqual(status, 200)
+        self.assertIn('id="run-all"', body)
+        self.assertIn("Запустить все тесты", body)
+
     def test_rates_api_returns_normalized_snapshot(self) -> None:
         status, content_type, body = self.request("/api/rates")
         payload = json.loads(body)
