@@ -58,6 +58,12 @@ class WebApplicationTests(unittest.TestCase):
         self.assertIn('id="run-all"', body)
         self.assertIn("Запустить все тесты", body)
 
+    def test_rates_directory_page_is_served(self) -> None:
+        status, _, body = self.request("/rates.html")
+        self.assertEqual(status, 200)
+        self.assertIn("СПРАВОЧНИК ВАЛЮТ", body)
+        self.assertIn('id="rate-search"', body)
+
     def test_rates_api_returns_normalized_snapshot(self) -> None:
         status, content_type, body = self.request("/api/rates")
         payload = json.loads(body)

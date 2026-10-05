@@ -16,7 +16,7 @@ STATIC_DIR = Path(__file__).with_name("web_static")
 
 class ConverterRequestHandler(BaseHTTPRequestHandler):
     service = RateService()
-    allowed_files = {"index.html", "app.css", "app.js", "tests.html", "tests.js"}
+    allowed_files = {"index.html", "app.css", "app.js", "tests.html", "tests.js", "rates.html", "rates.js"}
 
     def log_message(self, _format: str, *_args: object) -> None:
         """Keep normal application output clean."""
@@ -75,7 +75,14 @@ class ConverterRequestHandler(BaseHTTPRequestHandler):
 
 
 def run_server(port: int = 8000) -> None:
-    server = ThreadingHTTPServer(("127.0.0.1", port), ConverterRequestHandler)
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", port), ConverterRequestHandler)
+    except OSError as error:
+        if port != 8000:
+            raise
+        port = 8001
+        server = ThreadingHTTPServer(("127.0.0.1", port), ConverterRequestHandler)
+        print("Порт 8000 занят, поэтому выбран свободный порт 8001.")
     print(f"Веб-приложение запущено: http://127.0.0.1:{port}")
     print("Для остановки нажмите Ctrl+C.")
     try:
