@@ -75,7 +75,14 @@ class ConverterRequestHandler(BaseHTTPRequestHandler):
 
 
 def run_server(port: int = 8000) -> None:
-    server = ThreadingHTTPServer(("127.0.0.1", port), ConverterRequestHandler)
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", port), ConverterRequestHandler)
+    except OSError as error:
+        if port != 8000:
+            raise
+        port = 8001
+        server = ThreadingHTTPServer(("127.0.0.1", port), ConverterRequestHandler)
+        print("Порт 8000 занят, поэтому выбран свободный порт 8001.")
     print(f"Веб-приложение запущено: http://127.0.0.1:{port}")
     print("Для остановки нажмите Ctrl+C.")
     try:
