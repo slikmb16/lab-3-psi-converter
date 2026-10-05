@@ -3,7 +3,7 @@
 > Лабораторная работа №3 по PSI: Spec-Driven Development, BNM XML и аккуратный веб-интерфейс.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-14%20passed-2f855a)
+![Tests](https://img.shields.io/badge/tests-15%20passed-2f855a)
 ![License](https://img.shields.io/badge/dependencies-stdlib%20only-ef6237)
 
 ## ✨ Что умеет приложение
