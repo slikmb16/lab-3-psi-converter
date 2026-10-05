@@ -1,47 +1,45 @@
-# PSI Laboratory Work 3 — Report
+# Лабораторная работа №3 — отчёт
 
-## 1. Selected source and justification
+## 1. Выбранный источник и обоснование
 
-The application uses the official XML feed of the **National Bank of Moldova (BNM)**:
+Приложение использует официальный XML-источник **Национального банка Молдовы (BNM)**:
+`https://www.bnm.md/en/official_exchange_rates?get_xml=1&date=DD.MM.YYYY`.
 
-`https://www.bnm.md/en/official_exchange_rates?get_xml=1&date=DD.MM.YYYY`
+Он выбран как национальный авторитетный источник курсов MDL: не требует ключа API, имеет стабильный формат и сразу предоставляет нужные значения. Поскольку BNM публикует данные только в рабочие дни, приложение ищет курс назад на срок до 14 дней и показывает пользователю фактическую дату.
 
-It was selected because it is the national authoritative source for MDL rates, needs no API key, has a stable documented XML format, and directly supplies the MDL-per-currency values needed by the converter. BNM does not publish a new feed on every calendar day, so the application requests dates backwards for up to 14 days and labels the actual effective date.
+## 2. Артефакты SDD и реализация
 
-## 2. SDD artifacts and implementation process
+До реализации сформированы конституция, спецификация, план, задачи и чек-лист в `specs/001-currency-converter/`. Итог — локальное веб-приложение: Python-сервер получает и кэширует данные BNM, а браузерный интерфейс выполняет конвертацию и объясняет происхождение курса.
 
-The specification-first artifacts are in `specs/001-currency-converter/` and the project rules are in `.specify/memory/constitution.md`. They define observable behaviour, data semantics, technical plan, tasks and a requirement checklist before the source code commit.
+> Честное уточнение: этот проект подготовлен в Codex, а не в аккаунте Antigravity. Перед сдачей нужно заменить данное примечание на фактически использованные вами в Antigravity модели и этапы. Не следует указывать модель, которая реально не использовалась.
 
-The implementation is split into the domain model, BNM XML parser/client, persistent cache, service layer and Tkinter GUI. All core business logic is independent of the interface and can be unit-tested without a network connection.
+## 3. Что реализовано корректно
 
-> **Honesty note for submission:** this prepared workspace was assembled in Codex, not inside the student's Antigravity account. Before submitting, replace this paragraph with the *actual* Antigravity model(s) and stages used, and include the relevant screenshots/history if the teacher requests evidence. Do not claim a model that was not used.
+- красивый адаптивный веб-интерфейс целиком на русском языке;
+- поля суммы и валют, неактивная до ввода суммы кнопка, результат, источник и дата;
+- корректный расчёт в обоих направлениях, включая одинаковые валюты;
+- обработка пустого ответа, выходных, ошибок сети и неверного ввода;
+- постоянный JSON-кэш и предложение использовать его при отсутствии сети;
+- отдельная браузерная страница проверки и серверные unit-тесты.
 
-## 3. What was correct on the first implementation pass
+## 4. Ошибки и ручные исправления
 
-- The GUI contains all required controls: amount, source and target currencies, disabled-until-ready Convert button, result, source and effective date.
-- BNM rates are normalized to MDL per one currency unit, including BNM `Nominal` handling.
-- The converter supports both directions and same-currency conversion.
-- The last good normalized response is stored in local JSON and remains usable after restarting the program.
-- Rate refresh runs outside the UI thread; request errors do not terminate the window.
+На этапе интеграции первоначальный разбор даты вызывал несуществующий метод `date.strptime`. Он был исправлен на `datetime.strptime(...).date()` в `currency_converter/bnm.py`, а сценарий защищён тестом парсера. Также в среде отсутствовал лаунчер `py`, поэтому команды документации приведены к доступному `python`. После перехода на веб-интерфейс Tkinter-окно заменено локальным HTTP-сервером и страницами HTML/CSS/JavaScript.
 
-## 4. Errors and manual corrections (required)
+## 5. Соответствие спецификации
 
-During integration, the initial XML date conversion used a non-existent `date.strptime` call. It was manually corrected to `datetime.strptime(...).date()` in `currency_converter/bnm.py`; a parser test protects the corrected code. The local environment also did not expose the Windows `py` launcher, so the documented commands were corrected to use the available `python` executable. This is why the README's tested command is `python -m unittest discover -s tests -v`.
+Реализованы FR-01—FR-09: все обязательные элементы интерфейса, нормализация курсов с учётом `Nominal`, точный расчёт через MDL, проверка ввода, обработка одинаковых валют, дата и источник, fallback по рабочим дням и постоянный кэш. Не реализованы только исключённые из области задания функции: выбор исторической даты, комиссии и фоновое периодическое обновление.
 
-## 5. Correspondence with the specification
+## 6. Проверка
 
-The delivered implementation satisfies FR-01 through FR-09 in `spec.md`: all required controls exist; invalid, zero and negative input is rejected; equal currencies are handled; result provenance is displayed; no-network and no-publication-date paths are handled; and cache data survives restarts. The scope exclusions remain intentionally unimplemented.
-
-## 6. Verification
-
-Command run locally:
+Команда локальной проверки:
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
 
-Result: **11 tests passed**. Coverage includes XML parsing, nominal conversion, malformed and empty source responses, conversion in both directions, identical currencies, input validation, previous-working-day fallback, and persistent cache recovery.
+Покрываются XML-разбор, номинал, пустой и некорректный ответ, расчёты в обе стороны, одинаковая валюта, валидация, fallback и постоянный кэш. Дополнительно `http://127.0.0.1:8000/tests.html` выполняет шесть быстрых проверок JavaScript-логики прямо в браузере.
 
-## 7. Git workflow
+## 7. Git
 
-The local history contains separate branches and merge commits for specifications, implementation and tests: `feature/specifications`, `feature/implementation`, and `feature/tests`. A remote GitHub repository and real hosted pull requests are still needed to satisfy the assignment's external GitHub PR requirement; they cannot be created without access to the student's GitHub repository.
+История содержит отдельные ветки `feature/specifications`, `feature/implementation` и `feature/tests` с отдельными merge-коммитами. Для полного соответствия внешнему требованию остаётся запушить репозиторий в GitHub и создать реальные Pull Request: удалённый репозиторий и доступ к нему в эту рабочую среду не передавались.

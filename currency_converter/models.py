@@ -22,7 +22,7 @@ class RateSnapshot:
         normalized = {code.upper(): Decimal(str(rate)) for code, rate in self.rates.items()}
         normalized["MDL"] = Decimal("1")
         if any(rate <= 0 for rate in normalized.values()):
-            raise CurrencyError("All exchange rates must be positive.")
+            raise CurrencyError("Все курсы валют должны быть положительными.")
         object.__setattr__(self, "rates", normalized)
 
     @property
@@ -31,11 +31,11 @@ class RateSnapshot:
 
     def convert(self, amount: Decimal, source_currency: str, target_currency: str) -> Decimal:
         if amount <= 0:
-            raise CurrencyError("Amount must be greater than zero.")
+            raise CurrencyError("Сумма должна быть больше нуля.")
         source = source_currency.upper()
         target = target_currency.upper()
         if source not in self.rates or target not in self.rates:
-            raise CurrencyError("Selected currency is unavailable in the rate snapshot.")
+            raise CurrencyError("Выбранная валюта отсутствует в загруженном курсе.")
         if source == target:
             return amount
         return (amount * self.rates[source] / self.rates[target]).quantize(
@@ -61,4 +61,4 @@ class RateSnapshot:
                 source=str(payload.get("source", "National Bank of Moldova (BNM)")),
             )
         except (KeyError, TypeError, ValueError) as exc:
-            raise CurrencyError("Cached data has an invalid structure.") from exc
+            raise CurrencyError("Сохранённые данные имеют неверную структуру.") from exc

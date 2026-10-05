@@ -1,32 +1,24 @@
-# Implementation Plan: Currency Converter
+# План реализации: веб-конвертер валют
 
-## Technical design
-
-| Layer | Responsibility | Module |
+| Слой | Ответственность | Файл |
 |---|---|---|
-| Domain | immutable rate snapshot and conversion formula | `models.py` |
-| Data | XML interpretation and BNM HTTP fetch | `bnm.py` |
-| Storage | atomic local JSON cache read/write | `cache.py` |
-| Application | validation, date fallback and offline decision | `service.py` |
-| Presentation | Tkinter GUI and background request orchestration | `gui.py` |
+| Модель | снимок курсов и формула с `Decimal` | `models.py` |
+| Данные | XML BNM и HTTP-запрос | `bnm.py` |
+| Хранилище | атомарный JSON-кэш | `cache.py` |
+| Сервис | валидация и поиск предыдущей даты | `service.py` |
+| Веб | локальный HTTP API и русские HTML/CSS/JS-страницы | `web.py`, `web_static/` |
 
-## Key decisions
+## Решения
 
-1. **BNM XML** is authoritative for Moldova and needs no API key. It is appropriate for a MDL-based converter, although weekend fallback is required.
-2. **Decimal** is used for money calculation to avoid binary floating-point rounding artifacts.
-3. **JSON cache** saves normalized rates instead of only raw XML, allowing validation before persistence and easy recovery after restart.
-4. **Tkinter** fulfils the graphical desktop requirement with no external install.
+1. Официальный XML BNM не требует ключа API и авторитетен для MDL.
+2. `Decimal` предотвращает ошибки бинарной арифметики в серверной части.
+3. JSON хранит уже проверенные нормализованные курсы.
+4. Сервер стандартной библиотеки запускается одной командой, без внешних пакетов.
 
-## Error handling
+## Стратегия тестирования
 
-- Missing/invalid XML results in `DataUnavailableError`, not an application crash.
-- Network failure causes a cache prompt; declining it leaves the GUI usable.
-- Empty BNM result is treated as unavailable and causes a prior-date lookup.
-- Cache corruption is ignored safely, then reported as no cache.
-
-## Test strategy
-
-- Fixture-based XML parser tests: nominal handling and absent fields.
-- Domain conversion tests in both directions and same-currency path.
-- Input-validation parameterized tests.
-- Service tests with injected fetch functions for empty-response fallback and offline cache path.
+- Фикстуры XML: номинал, отсутствие обязательных полей и пустой ответ.
+- Расчёты в обоих направлениях и одинаковая валюта.
+- Параметризованная проверка суммы.
+- Сервисный fallback с подставным источником.
+- Встроенная страница JavaScript-проверки пользовательской логики.

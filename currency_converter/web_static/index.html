@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111a2d">
+  <title>Курс · Конвертер валют</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Курс — главная"><span class="brand-mark">₼</span><span>КУРС</span></a>
+      <nav><a href="#converter">Конвертер</a><a href="/tests.html">Проверка</a></nav>
+    </header>
+    <section class="hero">
+      <p class="eyebrow">ОФИЦИАЛЬНЫЕ КУРСЫ BNM</p>
+      <h1>Конвертируйте уверенно.<br><em>Понимайте каждый курс.</em></h1>
+      <p class="lead">Аккуратный конвертер на основе данных Национального банка Молдовы. Сохранённые курсы доступны даже без сети.</p>
+      <div id="status" class="status loading" role="status">Загружаем актуальные данные…</div>
+    </section>
+    <section id="converter" class="converter-card" aria-label="Конвертер валют">
+      <div class="card-header"><div><p class="eyebrow">КОНВЕРТЕР</p><h2>Рассчитайте сумму</h2></div><button id="refresh" class="icon-button" title="Обновить курсы" aria-label="Обновить курсы">↻</button></div>
+      <div class="input-group"><label for="amount">Сумма</label><div class="amount-wrap"><input id="amount" inputmode="decimal" autocomplete="off" placeholder="Например, 100" aria-describedby="amount-error"><span id="from-sign">EUR</span></div><p id="amount-error" class="field-error" aria-live="polite"></p></div>
+      <div class="currency-grid">
+        <div><label for="source">Из валюты</label><select id="source" disabled></select></div>
+        <button id="swap" class="swap" title="Поменять валюты местами" aria-label="Поменять валюты местами">⇄</button>
+        <div><label for="target">В валюту</label><select id="target" disabled></select></div>
+      </div>
+      <button id="convert" class="primary" disabled>Конвертировать <span>→</span></button>
+      <div class="result" aria-live="polite"><span class="result-label">РЕЗУЛЬТАТ</span><strong id="result">—</strong><p id="formula">Введите сумму и выберите валюты.</p></div>
+      <footer id="rate-meta" class="rate-meta">Источник будет указан после загрузки курсов.</footer>
+    </section>
+    <section class="trust-grid">
+      <article><span>◈</span><h3>Официальный источник</h3><p>Данные Национального банка Молдовы — без посредников.</p></article>
+      <article><span>◷</span><h3>Умный поиск даты</h3><p>Если курс не опубликован, берём ближайший доступный и сообщаем дату.</p></article>
+      <article><span>⌁</span><h3>Работа без сети</h3><p>Последний успешный курс хранится локально и переживает перезапуск.</p></article>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -14,13 +14,13 @@ FetchFunction = Callable[[date], RateSnapshot]
 def validate_amount(value: str) -> Decimal:
     normalized = value.strip().replace(",", ".")
     if not normalized:
-        raise ValueError("Enter an amount.")
+        raise ValueError("Введите сумму.")
     try:
         amount = Decimal(normalized)
     except InvalidOperation as exc:
-        raise ValueError("Amount must be a number, for example 125.50.") from exc
+        raise ValueError("Сумма должна быть числом, например 125,50.") from exc
     if not amount.is_finite() or amount <= 0:
-        raise ValueError("Amount must be greater than zero.")
+        raise ValueError("Сумма должна быть больше нуля.")
     return amount
 
 
@@ -43,7 +43,7 @@ class RateService:
             except DataUnavailableError as exc:
                 last_error = exc
         raise DataUnavailableError(
-            "No BNM rates were available for the last 14 days. Check your internet connection."
+            "За последние 14 дней не найдено курсов BNM. Проверьте подключение к интернету."
         ) from last_error
 
     def cached_snapshot(self) -> RateSnapshot | None:

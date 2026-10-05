@@ -1,24 +1,24 @@
-# Tasks: Currency Converter
+# Задачи: веб-конвертер валют
 
-## Phase 1 — Foundation
+## Этап 1 — Основа
 
-- [x] T001 Create repository documentation and project constitution.
-- [x] T002 Write feature specification, plan and test strategy.
+- [x] T001 Создать документацию репозитория и конституцию проекта.
+- [x] T002 Описать спецификацию, план и стратегию тестирования.
 
-## Phase 2 — Domain and data
+## Этап 2 — Модель и данные
 
-- [x] T003 Create rate snapshot domain model and Decimal conversion formula.
-- [x] T004 Implement strict BNM XML parser and HTTP client.
-- [x] T005 Implement persistent atomic JSON cache.
-- [x] T006 Implement input validation, date fallback and offline cache decision.
+- [x] T003 Создать модель снимка курсов и формулу на Decimal.
+- [x] T004 Реализовать XML-парсер BNM и HTTP-клиент.
+- [x] T005 Реализовать постоянный атомарный JSON-кэш.
+- [x] T006 Реализовать валидацию, fallback даты и offline-кэш.
 
-## Phase 3 — GUI
+## Этап 3 — Веб-интерфейс
 
-- [x] T007 Build accessible Tkinter layout and disabled-state conversion button.
-- [x] T008 Run data loading in a worker thread and present loading/error/cache states.
+- [x] T007 Создать русскоязычный адаптивный веб-интерфейс и неактивную кнопку.
+- [x] T008 Добавить API, статусы загрузки, ошибок и сохранённого курса.
 
-## Phase 4 — Verification and delivery
+## Этап 4 — Проверка и сдача
 
-- [x] T009 Write unit tests for parser, calculation, validation and failure paths.
-- [x] T010 Complete README and mandatory report.
-- [x] T011 Run the documented test command and record result.
+- [x] T009 Написать unit-тесты парсера, расчётов, валидации и сбоев.
+- [x] T010 Заполнить README и обязательный отчёт.
+- [x] T011 Запустить описанную в README команду тестов.
