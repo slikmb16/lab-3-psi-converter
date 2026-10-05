@@ -13,7 +13,7 @@ Desktop currency converter built from Spec-Driven Development artifacts. It uses
 python -m currency_converter
 ```
 
-The first successful BNM response is saved locally in `data/cache.json`. The program will offer this saved rate when the network is unavailable.
+The first successful BNM response is saved locally in `%LOCALAPPDATA%\PSI-Lab3-CurrencyConverter\rates.json`. The program will offer this saved rate when the network is unavailable.
 
 ## Run tests
 
