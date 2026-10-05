@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 from typing import Callable
 
-from .bnm import DataUnavailableError, fetch_bnm_rates
+from .bnm import DataUnavailableError, NetworkUnavailableError, fetch_bnm_rates
 from .cache import RateCache
 from .models import RateSnapshot
 
@@ -38,6 +38,8 @@ class RateService:
                 snapshot = self.fetch(requested - timedelta(days=offset))
                 self.cache.save(snapshot)
                 return snapshot, offset > 0 or snapshot.effective_date != requested
+            except NetworkUnavailableError:
+                raise
             except DataUnavailableError as exc:
                 last_error = exc
         raise DataUnavailableError(

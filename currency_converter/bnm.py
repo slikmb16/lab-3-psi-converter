@@ -15,6 +15,10 @@ class DataUnavailableError(RuntimeError):
     """BNM data cannot be obtained or cannot be trusted."""
 
 
+class NetworkUnavailableError(DataUnavailableError):
+    """The remote endpoint could not be reached; retrying earlier dates will not help."""
+
+
 def _text(parent: ET.Element, name: str) -> str:
     value = parent.findtext(name)
     if not value or not value.strip():
@@ -55,4 +59,4 @@ def fetch_bnm_rates(requested_date: date, timeout_seconds: int = 12) -> RateSnap
         with urlopen(request, timeout=timeout_seconds) as response:
             return parse_bnm_xml(response.read().decode("utf-8"))
     except (URLError, OSError, UnicodeDecodeError) as exc:
-        raise DataUnavailableError("Could not connect to the National Bank of Moldova.") from exc
+        raise NetworkUnavailableError("Could not connect to the National Bank of Moldova.") from exc
