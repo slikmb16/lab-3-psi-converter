@@ -1,38 +1,46 @@
-# Currency Converter — PSI Lab 3
+# КУРС — веб-конвертер валют · Лабораторная работа №3
 
-Desktop currency converter built from Spec-Driven Development artifacts. It uses the official National Bank of Moldova (BNM) XML feed and supports cached offline operation.
+Красивое локальное веб-приложение для конвертации валют по официальным данным Национального банка Молдовы (BNM). Интерфейс и сообщения полностью на русском языке.
 
-## Requirements
+## Возможности
 
-- Python 3.10 or newer (no third-party runtime packages)
-- Tkinter (included with the usual Windows Python installation)
+- ввод суммы, выбор исходной и целевой валюты;
+- корректный расчёт через MDL с учётом номинала BNM;
+- источник и фактическая дата курса прямо в интерфейсе;
+- автоматический поиск последнего рабочего дня, если курс на выбранную дату не опубликован;
+- локальное сохранение последнего успешного курса и предложение использовать его без сети;
+- встроенная веб-страница проверки интерфейсной логики;
+- серверные unit-тесты для разбора XML, вычислений, валидации, кэша и fallback-логики.
 
-## Start the application
+## Запуск
 
 ```powershell
 python -m currency_converter
 ```
 
-The first successful BNM response is saved locally in `%LOCALAPPDATA%\PSI-Lab3-CurrencyConverter\rates.json`. The program will offer this saved rate when the network is unavailable.
+После запуска откройте в браузере [http://127.0.0.1:8000](http://127.0.0.1:8000). Для остановки сервера нажмите `Ctrl+C` в терминале.
 
-## Run tests
+Сохранённые курсы находятся в `%LOCALAPPDATA%\PSI-Lab3-CurrencyConverter\rates.json` и не пропадают после перезапуска.
+
+## Проверка
+
+Автоматические серверные тесты:
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
 
-## Project layout
+В браузере также доступна страница [http://127.0.0.1:8000/tests.html](http://127.0.0.1:8000/tests.html), где можно вручную запустить шесть быстрых проверок логики интерфейса.
 
-- `specs/001-currency-converter/` — specification, implementation plan, task list and quality checklist
-- `.specify/memory/constitution.md` — project rules
-- `currency_converter/` — GUI and application logic
-- `tests/` — unit tests
-- `REPORT.md` — required lab report
+## Структура
 
-## Data source
+- `currency_converter/web.py` — локальный веб-сервер и API курсов;
+- `currency_converter/web_static/` — русскоязычный интерфейс HTML/CSS/JavaScript;
+- `currency_converter/` — модель, XML-парсер BNM, кэш и сервисный слой;
+- `tests/` — unit-тесты;
+- `specs/001-currency-converter/` — SDD-спецификация, план и задачи;
+- `REPORT.md` — отчёт по лабораторной работе.
 
-The application requests BNM's official XML endpoint:
+## Источник данных
 
-`https://www.bnm.md/en/official_exchange_rates?get_xml=1&date=DD.MM.YYYY`
-
-BNM publishes rates for working days. If today's response is empty, the application searches earlier dates and clearly marks the date actually used.
+Официальный XML-эндпоинт BNM: `https://www.bnm.md/en/official_exchange_rates?get_xml=1&date=DD.MM.YYYY`.

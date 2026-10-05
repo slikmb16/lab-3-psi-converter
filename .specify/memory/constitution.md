@@ -1,21 +1,21 @@
-# Currency Converter Constitution
+# Конституция проекта «КУРС»
 
-## Principles
+## Принципы
 
-1. **Specification first.** Behavioural requirements are captured in Markdown and reviewed before implementation begins.
-2. **Reliable offline behaviour.** A failed request must never terminate the GUI. A locally persisted last known good rate may be used only with its real source date shown.
-3. **Correct financial calculation.** BNM rates represent MDL per currency nominal; conversion always goes through MDL and respects `Nominal`.
-4. **Transparent data provenance.** Every displayed result identifies BNM and the effective rate date.
-5. **Test the non-visual core.** Parsing, validation, conversion and cache fallback are independently testable without Tkinter or a live network.
+1. **Сначала спецификация.** Наблюдаемое поведение фиксируется в Markdown до кода.
+2. **Надёжность без сети.** Ошибка запроса не ломает интерфейс; сохранённый курс используется только с реальной датой.
+3. **Корректная финансовая формула.** Курсы BNM учитывают `Nominal`, а конвертация всегда идёт через MDL.
+4. **Прозрачность.** Каждый результат показывает BNM и дату курса.
+5. **Проверяемость.** Парсинг, валидация, формула и кэш тестируются без браузера и сети.
 
-## Constraints
+## Ограничения
 
-- Desktop graphical interface; no console-only workflow.
-- Python standard library only at runtime.
-- Cache data is local, JSON encoded, and must survive restart.
-- Invalid user input never triggers a network request or calculation.
+- Веб-интерфейс, не консольное приложение.
+- Во время работы сервер использует только стандартную библиотеку Python.
+- Локальный JSON-кэш переживает перезапуск.
+- Некорректный ввод не запускает расчёт или сетевой запрос.
 
-## Quality gate
+## Условие готовности
 
-Before release, all tasks in `specs/001-currency-converter/tasks.md` marked complete and
-`python -m unittest discover -s tests -v` must pass.
+Все задачи в `specs/001-currency-converter/tasks.md` отмечены как завершённые, а команда
+`python -m unittest discover -s tests -v` выполняется успешно.

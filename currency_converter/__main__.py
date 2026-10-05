@@ -1,5 +1,5 @@
-from .gui import CurrencyConverterApp
+from .web import run_server
 
 
 if __name__ == "__main__":
-    CurrencyConverterApp().run()
+    run_server()
