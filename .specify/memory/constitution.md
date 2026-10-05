@@ -18,4 +18,4 @@
 ## Quality gate
 
 Before release, all tasks in `specs/001-currency-converter/tasks.md` marked complete and
-`py -m unittest discover -s tests -v` must pass.
+`python -m unittest discover -s tests -v` must pass.
