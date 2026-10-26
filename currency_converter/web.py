@@ -16,7 +16,10 @@ STATIC_DIR = Path(__file__).with_name("web_static")
 
 class ConverterRequestHandler(BaseHTTPRequestHandler):
     service = RateService()
-    allowed_files = {"index.html", "app.css", "app.js", "tests.html", "tests.js", "rates.html", "rates.js"}
+    allowed_files = {
+        "index.html", "app.css", "app.js", "tests.html", "tests.js", "rates.html", "rates.js",
+        "banks.html", "banks.js", "guide.html",
+    }
 
     def log_message(self, _format: str, *_args: object) -> None:
         """Keep normal application output clean."""

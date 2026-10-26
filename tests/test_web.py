@@ -64,6 +64,14 @@ class WebApplicationTests(unittest.TestCase):
         self.assertIn("СПРАВОЧНИК ВАЛЮТ", body)
         self.assertIn('id="rate-search"', body)
 
+    def test_bank_directory_and_guide_are_served(self) -> None:
+        bank_status, _, bank_body = self.request("/banks.html")
+        guide_status, _, guide_body = self.request("/guide.html")
+        self.assertEqual(bank_status, 200)
+        self.assertIn("ПОЛЕЗНЫЕ КОНТАКТЫ", bank_body)
+        self.assertEqual(guide_status, 200)
+        self.assertIn("ФИНАНСОВЫЙ ГИД", guide_body)
+
     def test_rates_api_returns_normalized_snapshot(self) -> None:
         status, content_type, body = self.request("/api/rates")
         payload = json.loads(body)
